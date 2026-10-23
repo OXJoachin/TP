@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Détail de la tâche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="conteneur">
+        <section class="carte">
+            <h1>Tâche n° {{ tache['id'] }}</h1>
+            <h2>{{ tache['titre'] }}</h2>
+            <p>{{ tache['description'] or "Aucune description fournie." }}</p>
+            <p><strong>État :</strong>
+                {% if tache['terminee'] %}Terminée{% else %}En cours{% endif %}
+            </p>
+            <a class="lien-retour" href="{{ url_for('accueil') }}">← Retour à la liste</a>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestion de tâches</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="conteneur">
+        <header>
+            <h1>Ma gestion de tâches</h1>
+            <p>Version sans base de données — les tâches disparaissent au redémarrage.</p>
+        </header>
+        <section class="carte">
+            <h2>Ajouter une tâche</h2>
+            <form action="{{ url_for('ajouter') }}" method="post">
+                <label for="titre">Titre *</label>
+                <input id="titre" name="titre" type="text" required>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"></textarea>
+                <button type="submit">Ajouter</button>
+            </form>
+        </section>
+        <section>
+            <h2>Mes tâches ({{ taches|length }})</h2>
+            {% if taches %}
+                <ul class="liste-taches">
+                    {% for tache in taches %}
+                        <li class="tache">
+                            <div class="infos">
+                                <a class="titre-tache {% if tache['terminee'] %}terminee{% endif %}"
+                                   href="{{ url_for('detail_tache', tache_id=tache['id']) }}">
+                                    {{ tache['titre'] }}
+                                </a>
+                                {% if tache['description'] %}<p>{{ tache['description'] }}</p>{% endif %}
+                                <small>État : {% if tache['terminee'] %}Terminée{% else %}En cours{% endif %}</small>
+                            </div>
+                            <div class="actions">
+                                <form action="{{ url_for('terminer', tache_id=tache['id']) }}" method="post">
+                                    <button class="secondaire" type="submit">
+                                        {% if tache['terminee'] %}Réouvrir{% else %}Terminer{% endif %}
+                                    </button>
+                                </form>
+                                <form action="{{ url_for('supprimer', tache_id=tache['id']) }}" method="post"
+                                      onsubmit="return confirm('Supprimer cette tâche ?');">
+                                    <button class="danger" type="submit">Supprimer</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="vide">Aucune tâche pour le moment. Ajoute ta première tâche ci-dessus.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
